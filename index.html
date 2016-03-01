@@ -4,14 +4,85 @@
 	<title>ReactJS - Filtered List Ex.&copy;</title>
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="./bower_components/react/react.min.js"></script>
+	<script type="text/javascript" src="./bower_components/babel/browser.min.js"></script>
 </head>
 <body>
 
 	<div id="mount-point"></div>
 
-	<script type="text/jsx">
+	<script type="text/babel">
 
-		// ...
+		var FilteredList = React.createClass({
+
+			filterList: function(event) {
+
+				var updatedList = this.state.initialItems;
+
+				updatedList = updatedList.filter(function(item) {
+
+					return item
+							.toLowerCase().search(
+								event.target.value.toLowerCase()
+							) !== -1;
+				});
+
+				this.setState({ items : updatedList });
+			},
+
+			getInitialState: function() {
+
+				return {
+
+					initialItems: [
+						"Apples",
+						"Broccoli",
+						"Chicken",
+						"Duck",
+						"Eggs",
+						"Fish",
+						"Granola",
+						"Hash Browns"
+					],
+
+					items: []
+				};
+			},
+
+			componentWillMount: function() {
+
+				this.setState({ items : this.state.initialItems });
+			},
+
+			render: function() {
+
+				return (
+					<div>
+						<input type="text" placeholder="Search..." onChange={ this.filterList } />
+						<List items={ this.state.items } />
+					</div>
+				);
+			}
+		});
+
+		var List = React.createClass({
+
+			render: function() {
+
+				return (
+					<ul>
+						{
+							this.props.items.map(function(item) {
+
+								return <li key={item}>{ item }</li>
+							})
+						}
+					</ul>
+				);
+			}
+		});
+
+		React.render(<FilteredList />, document.getElementById('mount-point'));
+
 	</script>
 
 </body>
